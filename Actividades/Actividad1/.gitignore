@@ -1,2 +1,4 @@
 *.pyc
 file.txt
+dictionary.txt
+__pycache__/
