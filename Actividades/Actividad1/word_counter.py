@@ -36,17 +36,20 @@ class WordCounter:
         for i, key in enumerate(dictionary.keys()):
             print (i, ".- " + key + ": ", dictionary[key])
 
+    # Calculate distance.
     def cosine_distance(self, v1, v2):
         common = v1[1].intersection(v2[1])
         x = sum(v1[0][ch] * v2[0][ch] for ch in common) / v1[2] / v2[2]
         return x
     
+    # Convert from word to a vector for cosine distance calculation
     def word_to_vector(self, word):
         cw = Counter(word)
         sw = set(cw)
         lw = math.sqrt(sum(c * c for c in cw.values()))
         return cw, sw, lw
 
+    # Used for oppening a text file containing a dictionary of wors to compare
     def open_dictionary_file(self, file_name):
         try:
             file = open(file_name, "r")
@@ -55,6 +58,7 @@ class WordCounter:
         else:
             return file
 
+    # Set the analyzer dictionary only when needed
     def define_analyzer_dictionary(self, file):
         text = file.read()
         file.close()
@@ -69,6 +73,7 @@ class WordCounter:
         print ("+---------------------------------------+")
         print ()
 
+    # Compare strings and get distance. If the cosine distance is 1, it means it is the same word, 0 if not.
     def print_analyzed_output(self):
         self.define_analyzer_dictionary(self.open_dictionary_file(DICTIONARY_FILE))
         final = {}
