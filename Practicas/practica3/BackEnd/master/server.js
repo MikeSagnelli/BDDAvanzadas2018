@@ -4,6 +4,7 @@ const multer  = require('multer');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const master = require('./master')
+const path = require('path');
 
 const upload = multer({ dest: 'uploads/' })
 const app = express();
@@ -20,10 +21,10 @@ app.post('/file', upload.single('file'), function (request, result, next) {
 })
 
 app.get('/file/:fileName', async function (request, result) {
-  let path = __dirname + "/uploads/" + request.params.fileName;
+  let filePath = path.join(__dirname, '/uploads', request.params.fileName);
   let ok = await master.getFile(request.params.fileName);
-  result.sendFile(path);
-  fs.unlinkSync(path);
+  result.sendFile(filePath);
+  // fs.unlinkSync(filePath);
 });
 
 app.get('/', function(request, result) {

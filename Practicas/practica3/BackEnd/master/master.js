@@ -88,14 +88,13 @@ async function sendClusterToSlave(fileName, clusterSlice, clusterIndex, slaveInd
 }
 
 async function getFile(fileName){
-    console.log(fileName);
     for(let i = 0; i < files[fileName].length; i++){
         let cluster = await getCluster(fileName, i);
         if(!cluster) {
             console.error(`Could not retrieve cluster number ${i} from ${fileName}`);
             return null;
         }
-        fs.appendFileSync(fileName, Buffer.from(cluster.data).toString("utf8"));
+        fs.appendFileSync(__dirname + "/uploads/" + fileName, Buffer.from(cluster.data).toString("utf8"));
     }
 
     return true;
