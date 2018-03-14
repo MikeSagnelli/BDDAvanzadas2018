@@ -8,9 +8,9 @@ const replicaNumber = 2;
 let files = {};
 
 let slaves = [
-    {index: 0, address:"http://localhost:4001", clusterCount: 0},
-    {index: 1, address:"http://localhost:4002", clusterCount: 0},
-    {index: 2, address:"http://localhost:4003", clusterCount: 0}
+    {index: 0, address:"http://10.43.49.139:4004", clusterCount: 0},
+    {index: 1, address:"http://10.43.89.121:4004", clusterCount: 0},
+    {index: 2, address:"http://10.43.94.3:4004", clusterCount: 0}
 ];
 
 function getBestSlaveIndex(){
@@ -92,9 +92,10 @@ async function getFile(fileName){
         let cluster = await getCluster(fileName, i);
         if(!cluster) {
             console.error(`Could not retrieve cluster number ${i} from ${fileName}`);
-            return null;
         }
-        fs.appendFileSync(__dirname + "/uploads/" + fileName, Buffer.from(cluster.data).toString("utf8"));
+        else{
+            fs.appendFileSync(__dirname + "/uploads/" + fileName, Buffer.from(cluster.data).toString("utf8"));
+        }
     }
 
     return true;
@@ -109,7 +110,7 @@ async function getCluster(fileName, index){
             return cluster;
         }
         else{
-            return null;
+            continue;
         }
     }
 }
@@ -122,14 +123,12 @@ async function getClusterFromSlave(slaveIndex, fileName, index){
         json: true
     };
 
-    let slaveResponse;
-    try{
-        slaveResponse = requestPromise(requestOptions);
-    } catch (error) {
-        console.error(`Error getting cluster ${index} of ${fileName} from slave ${slaveIndex}`);
-        console.error(error.error);
-        return null;
-    }
+    let slaveResponse = requestPromise(requestOptions).then(function(res){
+        return res;
+    }).catch(function(err){
+        return null; 
+    });
+
     return slaveResponse;
 }
 
